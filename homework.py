@@ -1,5 +1,5 @@
 from dataclasses import asdict, dataclass
-from typing import ClassVar, Dict
+from typing import ClassVar, Dict, Type
 
 
 @dataclass
@@ -21,15 +21,15 @@ class InfoMessage:
     calories: float
 
     def get_message(self) -> str:
-        return (self.TEXT_MESSAGE.format_map(asdict(self)))
+        return self.TEXT_MESSAGE.format_map(asdict(self))
 
 
 class Training:
     """Базовый класс тренировки."""
 
-    M_IN_KM: int = 1000
+    M_IN_KM: float = 1000
     LEN_STEP: float = 0.65
-    MINUTES_IN_HOUR: int = 60
+    MINUTES_IN_HOUR: float = 60
 
     def __init__(self,
                  action: int,
@@ -50,8 +50,8 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        raise NotImplementedError("""Subclasses should implement
-                                 get_spent_calories!""")
+        raise NotImplementedError(f'{type(self).__name__} error. Subclasses should implement '
+                                 'get_spent_calories!')
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
@@ -66,8 +66,8 @@ class Training:
 class Running(Training):
     """Тренировка: бег."""
 
-    CALORIES_MEAN_SPEED_MULTIPLIER: int = 18
-    CALORIES_ENERGY_SUBTRAHEND: int = 20
+    CALORIES_MEAN_SPEED_MULTIPLIER: float = 18
+    CALORIES_ENERGY_SUBTRAHEND: float = 20
 
     def get_spent_calories(self) -> float:
         duration_in_minutes = self.duration_h * self.MINUTES_IN_HOUR
@@ -81,7 +81,7 @@ class SportsWalking(Training):
 
     CALORIES_WEIGHT_MULTIPLIER: float = 0.035
     CALORIES_DURATION_MULTIPLIER: float = 0.029
-    CALORIES_MEAN_SPEED_SQUARING: int = 2
+    CALORIES_MEAN_SPEED_SQUARING: float = 2
 
     def __init__(self,
                  action: int,
@@ -106,7 +106,7 @@ class Swimming(Training):
 
     LEN_STEP: float = 1.38
     CALORIES_MEAN_SPEED_SUBTRAHEND: float = 1.1
-    CALORIES_WEIGHT_MULTIPLIER: int = 2
+    CALORIES_WEIGHT_MULTIPLIER: float = 2
 
     def __init__(self,
                  action: int,
@@ -132,14 +132,14 @@ class Swimming(Training):
 
 def read_package(workout_type: str, data: list) -> Training:
     """Прочитать данные полученные от датчиков."""
-    training_data: Dict[str, type] = {
+    training_data: Dict[str, Type[Training]] = {
         'SWM': Swimming,
         'RUN': Running,
         'WLK': SportsWalking,
     }
 
-    if workout_type not in training_data.keys():
-        raise KeyError('Неизвестный тип тренировки')
+    if workout_type not in training_data:
+        raise KeyError(f'тренировки {workout_type} нет в списке известных')
 
     return training_data[workout_type](*data)
 
