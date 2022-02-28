@@ -50,8 +50,8 @@ class Training:
 
     def get_spent_calories(self) -> float:
         """Получить количество затраченных калорий."""
-        raise NotImplementedError(f'{type(self).__name__} error. Subclasses should implement '
-                                 'get_spent_calories!')
+        raise NotImplementedError(f'{type(self).__name__} error. Subclasses '
+                                  'should implement get_spent_calories!')
 
     def show_training_info(self) -> InfoMessage:
         """Вернуть информационное сообщение о выполненной тренировке."""
