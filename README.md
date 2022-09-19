@@ -107,10 +107,6 @@ read_package(workout_type, data)
 git clone https://github.com/SenkoAlina/hw_python_oop.git
 ```
 
-```
-cd api_yamdb
-```
-
 Cоздать и активировать виртуальное окружение:
 
 ```
